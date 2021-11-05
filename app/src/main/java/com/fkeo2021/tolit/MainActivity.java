@@ -9,6 +9,8 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +19,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,13 +84,37 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    //다이얼로그 선택하면 발동하는 메소드
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull @org.jetbrains.annotations.NotNull String[] permissions, @NonNull @org.jetbrains.annotations.NotNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
-    // power point make JOT same why? sibal silreck e JOTTO moo ni gga kikiki
-    // 11dal 22ill namakda kikiki
+    public void clickBtn(View view) {
+
+        double latitude=37.6;
+        double longitude=127.1;
+        int radius= 1000;
+
+        Retrofit.Builder builder= new Retrofit.Builder();
+        builder.baseUrl("https://dapi.kakao.com");
+        builder.addConverterFactory(GsonConverterFactory.create());
+        Retrofit retrofit= builder.build();
+
+        RetrofitService retrofitService= retrofit.create(RetrofitService.class);
+        Call<ApiLocalResponse> call= retrofitService.searchLocalByGson("화장실", longitude+"", latitude+"",radius );
+        call.enqueue(new Callback<ApiLocalResponse>() {
+            @Override
+            public void onResponse(Call<ApiLocalResponse> call, Response<ApiLocalResponse> response) {
+                ApiLocalResponse localResponse= response.body();
+
+                PlaceMeta meta= localResponse.meta;
+                List<Place> documents= localResponse.documents;
+                Toast.makeText(MainActivity.this, meta.total_count+"", Toast.LENGTH_SHORT).show();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ApiLocalResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "서버오류", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

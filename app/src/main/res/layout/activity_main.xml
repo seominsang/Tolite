@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="get local data by gson"
+        android:onClick="clickBtn"/>
+
     <!-- 지도뷰를 가진 프레그먼트를 배치하여 지도를 보여줌   -->
     <fragment
         android:id="@+id/frag_map"
@@ -20,9 +26,6 @@
         app:fabSize="mini"
         />
 
-<!--    <androidx.drawerlayout.widget.DrawerLayout-->
-<!--        android:layout_width="250dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:backgroundTint="@color/white"/>-->
+
 
 </RelativeLayout>
